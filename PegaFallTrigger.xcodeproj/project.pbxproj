@@ -11,6 +11,7 @@
 		EB9AC0F4250FC1A200DC1295 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB9AC0F3250FC1A200DC1295 /* Assets.xcassets */; };
 		EB9AC0F7250FC1A200DC1295 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB9AC0F5250FC1A200DC1295 /* LaunchScreen.storyboard */; };
 		EB9AC101250FD69900DC1295 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9AC100250FD69900DC1295 /* MainViewController.swift */; };
+		EBCC3C2E250FDBDE00845AEA /* FallData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCC3C2D250FDBDE00845AEA /* FallData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		EB9AC0F6250FC1A200DC1295 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EB9AC0F8250FC1A200DC1295 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB9AC100250FD69900DC1295 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		EBCC3C2D250FDBDE00845AEA /* FallData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 		EB9AC0E9250FC19E00DC1295 /* PegaFallTrigger */ = {
 			isa = PBXGroup;
 			children = (
+				EBCC3C2C250FDBC600845AEA /* Model */,
 				EB9AC0FF250FD66700DC1295 /* Resources */,
 				EB9AC0FE250FD55B00DC1295 /* View Controller */,
 				EB9AC0F8250FC1A200DC1295 /* Info.plist */,
@@ -75,6 +78,14 @@
 				EB9AC0F5250FC1A200DC1295 /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		EBCC3C2C250FDBC600845AEA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EBCC3C2D250FDBDE00845AEA /* FallData.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,6 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB9AC0EB250FC19E00DC1295 /* AppDelegate.swift in Sources */,
+				EBCC3C2E250FDBDE00845AEA /* FallData.swift in Sources */,
 				EB9AC101250FD69900DC1295 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
