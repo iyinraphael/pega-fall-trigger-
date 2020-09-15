@@ -109,7 +109,7 @@ class MainViewController: UIViewController {
         submitButton.addTarget(self, action: #selector(saveData), for: .touchUpInside)
         let attibute = [NSAttributedString.Key.foregroundColor: UIColor.black,
                         NSAttributedString.Key.backgroundColor: color]
-        let attributedString = NSAttributedString(string: "Submit", attributes: attibute)
+        let attributedString = NSAttributedString(string: "Get started!", attributes: attibute)
         submitButton.setAttributedTitle(attributedString, for: .normal)
         view.addSubview(submitButton)
         
@@ -140,20 +140,36 @@ class MainViewController: UIViewController {
             let model = deviceModelTextField.text,
             let email = ownersEmailTextField.text else { return }
         
+        let strData = "\(name), \(model), \(email)"
         
-        let docDirectoryUrl = try FileManager.default.url(for: .documentDirectory,
-                                                          in: .userDomainMask,
-                                                          appropriateFor: nil,
-                                                          create: false)
         
-        let fallData = FallData(deviceModel: model,
-                                deviceOwner: name,
-                                ownersEmail: email,
-                                latitude: nil,
-                                longitude: nil,
-                                indoor: nil)
+        let fm = FileManager.default.urls(for: .documentDirectory,
+                                            in: .userDomainMask)
+        let path = fm[0]
+        let fileName = path.appendingPathComponent("data.txt")
+        
+        do {
+            try strData.write(to: fileName, atomically: true, encoding: .utf8)
+            let input = try String(contentsOf: fileName)
+            print(input)
+        } catch {
+            print(error.localizedDescription)
+        }
+      
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) {
+        for textField in self.view.subviews where textField is UITextField {
+            textField.resignFirstResponder()
+        }
     }
     
     
+}
+
+extension MainViewController: UITextFieldDelegate {
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        deviceModelTextField.resignFirstResponder()
+    }
 }
