@@ -92,7 +92,7 @@ class MainViewController: UIViewController {
         mainStackView.addArrangedSubview(deviceModelStackView)
         
         let deviceModelLabel = UILabel()
-        deviceModelLabel.text = "Device Model :"
+        deviceModelLabel.text = "Device :"
         deviceModelLabel.font = .systemFont(ofSize: 14)
         deviceModelLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         deviceModelStackView.addArrangedSubview(deviceModelLabel)
@@ -155,13 +155,10 @@ class MainViewController: UIViewController {
         } catch {
             print(error.localizedDescription)
         }
+        
+        let vc = FallMonitorViewController()
+        present(vc, animated: true)
       
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) {
-        for textField in self.view.subviews where textField is UITextField {
-            textField.resignFirstResponder()
-        }
     }
     
     

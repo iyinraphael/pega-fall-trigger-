@@ -12,6 +12,7 @@
 		EB9AC0F7250FC1A200DC1295 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB9AC0F5250FC1A200DC1295 /* LaunchScreen.storyboard */; };
 		EB9AC101250FD69900DC1295 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9AC100250FD69900DC1295 /* MainViewController.swift */; };
 		EBCC3C2E250FDBDE00845AEA /* FallData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCC3C2D250FDBDE00845AEA /* FallData.swift */; };
+		EBCC3C30251173B900845AEA /* FallMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCC3C2F251173B900845AEA /* FallMonitorViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		EB9AC0F8250FC1A200DC1295 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB9AC100250FD69900DC1295 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		EBCC3C2D250FDBDE00845AEA /* FallData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallData.swift; sourceTree = "<group>"; };
+		EBCC3C2F251173B900845AEA /* FallMonitorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallMonitorViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				EB9AC100250FD69900DC1295 /* MainViewController.swift */,
+				EBCC3C2F251173B900845AEA /* FallMonitorViewController.swift */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -158,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBCC3C30251173B900845AEA /* FallMonitorViewController.swift in Sources */,
 				EB9AC0EB250FC19E00DC1295 /* AppDelegate.swift in Sources */,
 				EBCC3C2E250FDBDE00845AEA /* FallData.swift in Sources */,
 				EB9AC101250FD69900DC1295 /* MainViewController.swift in Sources */,
