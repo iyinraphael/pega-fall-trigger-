@@ -68,11 +68,28 @@ class FallMonitorViewController: UIViewController {
         accelContainerView.addSubview(accelStackView)
         
         accelXaxisLabel = UILabel()
+        accelXaxisLabel.adjustsFontSizeToFitWidth = true
         accelXaxisLabel.backgroundColor = Appearance.darkColor
         accelXaxisLabel.text = "Accel - X : 0.00"
         accelXaxisLabel.layer.masksToBounds = true
         accelXaxisLabel.layer.cornerRadius = 10
         accelStackView.addArrangedSubview(accelXaxisLabel)
+        
+        accelYaxisLabel = UILabel()
+        accelYaxisLabel.adjustsFontSizeToFitWidth = true
+        accelYaxisLabel.backgroundColor = Appearance.darkColor
+        accelYaxisLabel.text = "Accel - Y : 0.00"
+        accelYaxisLabel.layer.masksToBounds = true
+        accelYaxisLabel.layer.cornerRadius = 10
+        accelStackView.addArrangedSubview(accelYaxisLabel)
+        
+        accelZaxisLabel = UILabel()
+        accelZaxisLabel.adjustsFontSizeToFitWidth = true
+        accelZaxisLabel.backgroundColor = Appearance.darkColor
+        accelZaxisLabel.text = "Accel - Z : 0.00"
+        accelZaxisLabel.layer.masksToBounds = true
+        accelZaxisLabel.layer.cornerRadius = 10
+        accelStackView.addArrangedSubview(accelZaxisLabel)
         
         let switchView  = UIView()
         switchView.translatesAutoresizingMaskIntoConstraints = false
@@ -105,6 +122,9 @@ class FallMonitorViewController: UIViewController {
             switchFallButton.topAnchor.constraint(equalTo: switchView.topAnchor, constant: 10),
             switchFallButton.centerXAnchor.constraint(equalTo: switchView.centerXAnchor),
             
+            accelStackView.centerXAnchor.constraint(equalTo: accelContainerView.centerXAnchor),
+            accelStackView.topAnchor.constraint(equalTo: accelContainerView.topAnchor, constant: 10)
+            
         ])
         
         
@@ -117,6 +137,7 @@ class FallMonitorViewController: UIViewController {
     func updateAccAndGyro() {
         
         motionManager.startAccelerometerUpdates(to: OperationQueue.current!) { data, error in
+            
             
         }
     }
