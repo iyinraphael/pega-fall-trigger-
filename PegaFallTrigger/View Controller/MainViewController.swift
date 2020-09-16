@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import CoreMotion
-import CoreLocation
 
 class MainViewController: UIViewController {
 
@@ -20,15 +18,14 @@ class MainViewController: UIViewController {
     
     var deviceOwnerLabel: UILabel!
     var ownersEmailLabel: UILabel!
-    
-    let color = UIColor(red: 100.0/255.0 , green: 144.0/255.0, blue: 138.0/255.0, alpha: 1)
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Fall Trigger"
         
-        navigationController?.navigationBar.barTintColor = color
+        navigationController?.navigationBar.barTintColor = Appearance.color
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         
@@ -104,11 +101,11 @@ class MainViewController: UIViewController {
         
         let submitButton = UIButton()
         submitButton.translatesAutoresizingMaskIntoConstraints = false
-        submitButton.backgroundColor = color
+        submitButton.backgroundColor = Appearance.color
         submitButton.layer.cornerRadius = 20
         submitButton.addTarget(self, action: #selector(saveData), for: .touchUpInside)
         let attibute = [NSAttributedString.Key.foregroundColor: UIColor.black,
-                        NSAttributedString.Key.backgroundColor: color]
+                        NSAttributedString.Key.backgroundColor: Appearance.color]
         let attributedString = NSAttributedString(string: "Get started!", attributes: attibute)
         submitButton.setAttributedTitle(attributedString, for: .normal)
         view.addSubview(submitButton)

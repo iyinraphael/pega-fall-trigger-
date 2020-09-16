@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CoreMotion
+import CoreLocation
 
 class FallMonitorViewController: UIViewController {
 
@@ -15,12 +17,18 @@ class FallMonitorViewController: UIViewController {
     var accelContainerView: UIView!
     var gyroContainerView: UIView!
     var statusLabel: UILabel!
+    var accelXaxisLabel: UILabel!
+    var accelYaxisLabel: UILabel!
+    var accelZaxisLabel: UILabel!
+    var gyroXaxisLabel: UILabel!
+    var gyroYaxisLabel: UILabel!
+    var gyroZaxisLabel: UILabel!
+    var switchFallButton: UISwitch!
 
     var isFalling: Bool = false
     var status = "Normal"
-    
-    var lightColor = UIColor(red: 146/255, green: 190/255, blue: 178/255, alpha: 1)
-    var darkColor = UIColor(red: 55/255, green: 96/255, blue: 86/255, alpha: 1)
+    var motionManager  = CMMotionManager()
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +38,9 @@ class FallMonitorViewController: UIViewController {
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         statusLabel.text = "Status : \(status)"
         statusLabel.textColor = .white
-        statusLabel.backgroundColor = darkColor
+        statusLabel.backgroundColor = Appearance.darkColor
         statusLabel.layer.masksToBounds = true
-        statusLabel.layer.cornerRadius = 20
+        statusLabel.layer.cornerRadius = 10
         statusLabel.textAlignment = .center
         statusLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         view.addSubview(statusLabel)
@@ -40,17 +48,43 @@ class FallMonitorViewController: UIViewController {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
-        stackView.spacing = 20.0
+        stackView.spacing = 10
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
-        
+    
         accelContainerView = UIView()
-        accelContainerView.backgroundColor = lightColor
+        accelContainerView.backgroundColor = Appearance.color
         stackView.addArrangedSubview(accelContainerView)
         
         gyroContainerView = UIView()
-        gyroContainerView.backgroundColor = lightColor
+        gyroContainerView.backgroundColor = Appearance.color
         stackView.addArrangedSubview(gyroContainerView)
+        
+        let accelStackView = UIStackView()
+        accelStackView.translatesAutoresizingMaskIntoConstraints = false
+        accelStackView.axis = .vertical
+        accelStackView.spacing = 20
+        accelStackView.distribution = .fillEqually
+        accelContainerView.addSubview(accelStackView)
+        
+        accelXaxisLabel = UILabel()
+        accelXaxisLabel.backgroundColor = Appearance.darkColor
+        accelXaxisLabel.text = "Accel - X : 0.00"
+        accelXaxisLabel.layer.masksToBounds = true
+        accelXaxisLabel.layer.cornerRadius = 10
+        accelStackView.addArrangedSubview(accelXaxisLabel)
+        
+        let switchView  = UIView()
+        switchView.translatesAutoresizingMaskIntoConstraints = false
+        switchView.backgroundColor = Appearance.lightColor
+        switchView.layer.cornerRadius = 10
+        view.addSubview(switchView)
+        
+        switchFallButton =  UISwitch()
+        switchFallButton.translatesAutoresizingMaskIntoConstraints = false
+        switchFallButton.thumbTintColor = .black
+        switchFallButton.onTintColor = Appearance.color
+        switchView.addSubview(switchFallButton)
         
         NSLayoutConstraint.activate([
             statusLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
@@ -61,13 +95,30 @@ class FallMonitorViewController: UIViewController {
             stackView.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 40),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            stackView.heightAnchor.constraint(equalToConstant: 300)
+            stackView.heightAnchor.constraint(equalToConstant: 300),
+            
+            switchView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
+            switchView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            switchView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            switchView.heightAnchor.constraint(equalToConstant: 50),
+            
+            switchFallButton.topAnchor.constraint(equalTo: switchView.topAnchor, constant: 10),
+            switchFallButton.centerXAnchor.constraint(equalTo: switchView.centerXAnchor),
             
         ])
         
         
         
         
+    }
+    
+    // MARK: - Methods
+    
+    func updateAccAndGyro() {
+        
+        motionManager.startAccelerometerUpdates(to: OperationQueue.current!) { data, error in
+            
+        }
     }
     
 
