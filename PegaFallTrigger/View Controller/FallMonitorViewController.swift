@@ -30,7 +30,6 @@ class FallMonitorViewController: UIViewController {
     var status = "Normal"
     var motionManager  = CMMotionManager()
     let locationManager = CLLocationManager()
-    let noticationCenter = UNUserNotificationCenter.current()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,11 +54,11 @@ class FallMonitorViewController: UIViewController {
         view.addSubview(stackView)
     
         accelContainerView = UIView()
-        accelContainerView.backgroundColor = Appearance.color
+        accelContainerView.backgroundColor = .white
         stackView.addArrangedSubview(accelContainerView)
         
         gyroContainerView = UIView()
-        gyroContainerView.backgroundColor = Appearance.color
+        gyroContainerView.backgroundColor = .white
         stackView.addArrangedSubview(gyroContainerView)
         
         let accelStackView = UIStackView()
@@ -70,7 +69,9 @@ class FallMonitorViewController: UIViewController {
         accelContainerView.addSubview(accelStackView)
         
         accelXaxisLabel = UILabel()
-        accelXaxisLabel.adjustsFontSizeToFitWidth = true
+        accelXaxisLabel.translatesAutoresizingMaskIntoConstraints = false
+        accelXaxisLabel.font = .systemFont(ofSize: 14)
+        accelXaxisLabel.textAlignment = .center
         accelXaxisLabel.backgroundColor = Appearance.darkColor
         accelXaxisLabel.textColor = .white
         accelXaxisLabel.text = "Accel - X : 0.00"
@@ -79,7 +80,8 @@ class FallMonitorViewController: UIViewController {
         accelStackView.addArrangedSubview(accelXaxisLabel)
         
         accelYaxisLabel = UILabel()
-        accelYaxisLabel.adjustsFontSizeToFitWidth = true
+        accelYaxisLabel.font = .systemFont(ofSize: 14)
+        accelYaxisLabel.textAlignment = .center
         accelYaxisLabel.backgroundColor = Appearance.darkColor
         accelYaxisLabel.textColor = .white
         accelYaxisLabel.text = "Accel - Y : 0.00"
@@ -88,7 +90,8 @@ class FallMonitorViewController: UIViewController {
         accelStackView.addArrangedSubview(accelYaxisLabel)
         
         accelZaxisLabel = UILabel()
-        accelZaxisLabel.adjustsFontSizeToFitWidth = true
+        accelZaxisLabel.font = .systemFont(ofSize: 14)
+        accelZaxisLabel.textAlignment = .center
         accelZaxisLabel.backgroundColor = Appearance.darkColor
         accelZaxisLabel.textColor = .white
         accelZaxisLabel.text = "Accel - Z : 0.00"
@@ -105,7 +108,8 @@ class FallMonitorViewController: UIViewController {
         gyroContainerView.addSubview(gyroStackView)
         
         gyroXaxisLabel = UILabel()
-        gyroXaxisLabel.adjustsFontSizeToFitWidth = true
+        gyroXaxisLabel.font = .systemFont(ofSize: 14)
+        gyroXaxisLabel.textAlignment = .center
         gyroXaxisLabel.backgroundColor = Appearance.darkColor
         gyroXaxisLabel.textColor = .white
         gyroXaxisLabel.text = "Gyro - X : 0.00"
@@ -114,7 +118,8 @@ class FallMonitorViewController: UIViewController {
         gyroStackView.addArrangedSubview(gyroXaxisLabel)
         
         gyroYaxisLabel = UILabel()
-        gyroYaxisLabel.adjustsFontSizeToFitWidth = true
+        gyroYaxisLabel.font = .systemFont(ofSize: 14)
+        gyroYaxisLabel.textAlignment = .center
         gyroYaxisLabel.backgroundColor = Appearance.darkColor
         gyroYaxisLabel.textColor = .white
         gyroYaxisLabel.text = "Gyro - Y : 0.00"
@@ -123,7 +128,8 @@ class FallMonitorViewController: UIViewController {
         gyroStackView.addArrangedSubview(gyroYaxisLabel)
         
         gyroZaxisLabel = UILabel()
-        gyroZaxisLabel.adjustsFontSizeToFitWidth = true
+        gyroZaxisLabel.font = .systemFont(ofSize: 14)
+        gyroZaxisLabel.textAlignment = .center
         gyroZaxisLabel.backgroundColor = Appearance.darkColor
         gyroZaxisLabel.textColor = .white
         gyroZaxisLabel.text = "Gyro - Z : 0.00"
@@ -167,10 +173,12 @@ class FallMonitorViewController: UIViewController {
             accelStackView.centerXAnchor.constraint(equalTo: accelContainerView.centerXAnchor),
             accelStackView.topAnchor.constraint(equalTo: accelContainerView.topAnchor, constant: 10),
             accelStackView.centerYAnchor.constraint(equalTo: accelContainerView.centerYAnchor),
+            accelStackView.widthAnchor.constraint(equalToConstant: 100),
             
             gyroStackView.centerXAnchor.constraint(equalTo: gyroContainerView.centerXAnchor),
             gyroStackView.topAnchor.constraint(equalTo: gyroContainerView.topAnchor, constant: 10),
-            gyroStackView.centerYAnchor.constraint(equalTo: gyroContainerView.centerYAnchor)
+            gyroStackView.centerYAnchor.constraint(equalTo: gyroContainerView.centerYAnchor),
+            
             
         ])
         
@@ -179,6 +187,7 @@ class FallMonitorViewController: UIViewController {
     // MARK: - Methods
     
     @objc func updateAccAndGyro() {
+        let noticationCenter = UNUserNotificationCenter.current()
         
         if switchFallButton.isOn == true {
             
@@ -197,6 +206,9 @@ class FallMonitorViewController: UIViewController {
                                     
                                     self.motionManager.stopAccelerometerUpdates()
                                     self.motionManager.stopGyroUpdates()
+                                    
+                                    self.status = "Fall"
+                                    self.statusLabel.text = "Status : \(self.status)"
                                 }
                             }
                             
@@ -220,15 +232,50 @@ class FallMonitorViewController: UIViewController {
     }
     
     func alertUserOfFall() {
-        noticationCenter.delegate = self
+        let noticationCenter = UNUserNotificationCenter.current()
+//        noticationCenter.delegate = self
         
-        let show = UNNotificationAction(identifier: "show", title: "Fall Detected", options: .foreground)
-        let category = UNNotificationCategory(identifier: "alert", actions: [show], intentIdentifiers: [])
+        let content = UNMutableNotificationContent()
+        content.title = "Fall Detected"
+        content.body = "Comfirm if phone fell and is damaged?"
+        content.categoryIdentifier = "alarm"
+        content.userInfo = ["customData": "fizzbuzz"]
+        content.sound = UNNotificationSound.default
         
-        noticationCenter.setNotificationCategories([category])
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        noticationCenter.add(request)
+        
+//        let show = UNNotificationAction(identifier: "alert", title: "Fall Detected", options: .foreground)
+//        let category = UNNotificationCategory(identifier: "alert", actions: [show], intentIdentifiers: [])
+//
+//        noticationCenter.setNotificationCategories([category])
         
     }
     
 
 }
 
+extension FallMonitorViewController: UNUserNotificationCenterDelegate {
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let customData = userInfo["customData"] as? String {
+            print("Custom data received: \(customData)")
+            
+            switch response.actionIdentifier {
+            case UNNotificationDefaultActionIdentifier:
+                print("Default identifier")
+            case "alert":
+                print("Show more info")
+                break
+                
+            default:
+                break
+            }
+        }
+        completionHandler()
+    }
+}
