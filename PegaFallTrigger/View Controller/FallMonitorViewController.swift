@@ -17,6 +17,8 @@ class FallMonitorViewController: UIViewController {
     
     var accelContainerView: UIView!
     var gyroContainerView: UIView!
+    var switchView: UIView!
+    
     var statusLabel: UILabel!
     var accelXaxisLabel: UILabel!
     var accelYaxisLabel: UILabel!
@@ -24,12 +26,15 @@ class FallMonitorViewController: UIViewController {
     var gyroXaxisLabel: UILabel!
     var gyroYaxisLabel: UILabel!
     var gyroZaxisLabel: UILabel!
+    
     var switchFallButton: UISwitch!
-
+    var sendInfoButton: UIButton!
+    
     var isFalling: Bool = false
     var status = "Normal"
     var motionManager  = CMMotionManager()
     let locationManager = CLLocationManager()
+    var fallData: FallData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,7 +142,7 @@ class FallMonitorViewController: UIViewController {
         gyroZaxisLabel.layer.cornerRadius = 10
         gyroStackView.addArrangedSubview(gyroZaxisLabel)
         
-        let switchView  = UIView()
+        switchView  = UIView()
         switchView.translatesAutoresizingMaskIntoConstraints = false
         switchView.backgroundColor = Appearance.lightColor
         switchView.layer.cornerRadius = 10
@@ -150,6 +155,7 @@ class FallMonitorViewController: UIViewController {
         switchFallButton.thumbTintColor = .black
         switchFallButton.onTintColor = Appearance.color
         switchView.addSubview(switchFallButton)
+        
         
         NSLayoutConstraint.activate([
             statusLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
@@ -170,15 +176,15 @@ class FallMonitorViewController: UIViewController {
             switchFallButton.topAnchor.constraint(equalTo: switchView.topAnchor, constant: 10),
             switchFallButton.centerXAnchor.constraint(equalTo: switchView.centerXAnchor),
             
-            accelStackView.centerXAnchor.constraint(equalTo: accelContainerView.centerXAnchor),
-            accelStackView.topAnchor.constraint(equalTo: accelContainerView.topAnchor, constant: 10),
-            accelStackView.centerYAnchor.constraint(equalTo: accelContainerView.centerYAnchor),
-            accelStackView.widthAnchor.constraint(equalToConstant: 100),
-            
-            gyroStackView.centerXAnchor.constraint(equalTo: gyroContainerView.centerXAnchor),
-            gyroStackView.topAnchor.constraint(equalTo: gyroContainerView.topAnchor, constant: 10),
-            gyroStackView.centerYAnchor.constraint(equalTo: gyroContainerView.centerYAnchor),
-            
+            accelStackView.topAnchor.constraint(equalTo: accelContainerView.topAnchor),
+            accelStackView.leadingAnchor.constraint(equalTo: accelContainerView.leadingAnchor),
+            accelStackView.trailingAnchor.constraint(equalTo: accelContainerView.trailingAnchor),
+            accelStackView.bottomAnchor.constraint(equalTo: accelContainerView.bottomAnchor),
+        
+            gyroStackView.topAnchor.constraint(equalTo: gyroContainerView.topAnchor),
+            gyroStackView.leadingAnchor.constraint(equalTo: gyroContainerView.leadingAnchor),
+            gyroStackView.trailingAnchor.constraint(equalTo: gyroContainerView.trailingAnchor),
+            gyroStackView.bottomAnchor.constraint(equalTo: gyroContainerView.bottomAnchor),
             
         ])
         
@@ -209,6 +215,7 @@ class FallMonitorViewController: UIViewController {
                                     
                                     self.status = "Fall"
                                     self.statusLabel.text = "Status : \(self.status)"
+                                    self.showButton()
                                 }
                             }
                             
@@ -230,10 +237,9 @@ class FallMonitorViewController: UIViewController {
         }
     
     }
-    
+
     func alertUserOfFall() {
         let noticationCenter = UNUserNotificationCenter.current()
-//        noticationCenter.delegate = self
         
         let content = UNMutableNotificationContent()
         content.title = "Fall Detected"
@@ -246,13 +252,45 @@ class FallMonitorViewController: UIViewController {
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         noticationCenter.add(request)
+    }
+    
+    func showButton() {
         
-//        let show = UNNotificationAction(identifier: "alert", title: "Fall Detected", options: .foreground)
-//        let category = UNNotificationCategory(identifier: "alert", actions: [show], intentIdentifiers: [])
-//
-//        noticationCenter.setNotificationCategories([category])
+        let buttonView = UIView()
+               buttonView.translatesAutoresizingMaskIntoConstraints = false
+               buttonView.backgroundColor = .black
+               buttonView.layer.cornerRadius = 33
+               buttonView.clipsToBounds = true
+               view.addSubview(buttonView)
+               
+               sendInfoButton = UIButton()
+               sendInfoButton.translatesAutoresizingMaskIntoConstraints = false
+               sendInfoButton.backgroundColor = Appearance.color
+               sendInfoButton.layer.cornerRadius = 20
+               sendInfoButton.setTitle("Send", for: .normal)
+               sendInfoButton.titleLabel?.font = .systemFont(ofSize: 14)
+               sendInfoButton.addTarget(self, action: #selector(sendDataToServer), for: .touchUpInside)
+               buttonView.addSubview(sendInfoButton)
+        
+        NSLayoutConstraint.activate([
+            buttonView.heightAnchor.constraint(equalToConstant: 66),
+            buttonView.widthAnchor.constraint(equalToConstant: 66),
+            buttonView.topAnchor.constraint(equalTo: switchView.bottomAnchor, constant: 150),
+            buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            sendInfoButton.heightAnchor.constraint(equalToConstant: 44),
+            sendInfoButton.widthAnchor.constraint(equalToConstant: 44),
+            sendInfoButton.centerXAnchor.constraint(equalTo: buttonView.centerXAnchor),
+            sendInfoButton.centerYAnchor.constraint(equalTo: buttonView.centerYAnchor)
+        ])
+    }
+    
+    @objc func sendDataToServer() {
+        
         
     }
+    
+    
     
 
 }
