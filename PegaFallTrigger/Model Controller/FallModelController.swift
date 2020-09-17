@@ -33,7 +33,7 @@ class FallModelController {
         do {
             requestURL.httpBody = try JSONEncoder().encode(fallData)
         } catch {
-            NSLog("Erro sending faithDailyRep to server \(fallData): \(error)")
+            NSLog("Error sending faithDailyRep to server \(fallData): \(error)")
             completion(.failure(.failedEncode))
             return
         }

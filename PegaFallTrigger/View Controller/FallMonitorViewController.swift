@@ -6,6 +6,7 @@
 //  Copyright © 2020 Iyin Raphael. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import CoreMotion
 import CoreLocation
@@ -29,6 +30,7 @@ class FallMonitorViewController: UIViewController {
     var status = "Normal"
     var motionManager  = CMMotionManager()
     let locationManager = CLLocationManager()
+    let noticationCenter = UNUserNotificationCenter.current()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +72,7 @@ class FallMonitorViewController: UIViewController {
         accelXaxisLabel = UILabel()
         accelXaxisLabel.adjustsFontSizeToFitWidth = true
         accelXaxisLabel.backgroundColor = Appearance.darkColor
+        accelXaxisLabel.textColor = .white
         accelXaxisLabel.text = "Accel - X : 0.00"
         accelXaxisLabel.layer.masksToBounds = true
         accelXaxisLabel.layer.cornerRadius = 10
@@ -78,6 +81,7 @@ class FallMonitorViewController: UIViewController {
         accelYaxisLabel = UILabel()
         accelYaxisLabel.adjustsFontSizeToFitWidth = true
         accelYaxisLabel.backgroundColor = Appearance.darkColor
+        accelYaxisLabel.textColor = .white
         accelYaxisLabel.text = "Accel - Y : 0.00"
         accelYaxisLabel.layer.masksToBounds = true
         accelYaxisLabel.layer.cornerRadius = 10
@@ -86,10 +90,46 @@ class FallMonitorViewController: UIViewController {
         accelZaxisLabel = UILabel()
         accelZaxisLabel.adjustsFontSizeToFitWidth = true
         accelZaxisLabel.backgroundColor = Appearance.darkColor
+        accelZaxisLabel.textColor = .white
         accelZaxisLabel.text = "Accel - Z : 0.00"
         accelZaxisLabel.layer.masksToBounds = true
         accelZaxisLabel.layer.cornerRadius = 10
         accelStackView.addArrangedSubview(accelZaxisLabel)
+        
+        
+        let gyroStackView = UIStackView()
+        gyroStackView.translatesAutoresizingMaskIntoConstraints = false
+        gyroStackView.axis = .vertical
+        gyroStackView.spacing = 20
+        gyroStackView.distribution = .fillEqually
+        gyroContainerView.addSubview(gyroStackView)
+        
+        gyroXaxisLabel = UILabel()
+        gyroXaxisLabel.adjustsFontSizeToFitWidth = true
+        gyroXaxisLabel.backgroundColor = Appearance.darkColor
+        gyroXaxisLabel.textColor = .white
+        gyroXaxisLabel.text = "Gyro - X : 0.00"
+        gyroXaxisLabel.layer.masksToBounds = true
+        gyroXaxisLabel.layer.cornerRadius = 10
+        gyroStackView.addArrangedSubview(gyroXaxisLabel)
+        
+        gyroYaxisLabel = UILabel()
+        gyroYaxisLabel.adjustsFontSizeToFitWidth = true
+        gyroYaxisLabel.backgroundColor = Appearance.darkColor
+        gyroYaxisLabel.textColor = .white
+        gyroYaxisLabel.text = "Gyro - Y : 0.00"
+        gyroYaxisLabel.layer.masksToBounds = true
+        gyroYaxisLabel.layer.cornerRadius = 10
+        gyroStackView.addArrangedSubview(gyroYaxisLabel)
+        
+        gyroZaxisLabel = UILabel()
+        gyroZaxisLabel.adjustsFontSizeToFitWidth = true
+        gyroZaxisLabel.backgroundColor = Appearance.darkColor
+        gyroZaxisLabel.textColor = .white
+        gyroZaxisLabel.text = "Gyro - Z : 0.00"
+        gyroZaxisLabel.layer.masksToBounds = true
+        gyroZaxisLabel.layer.cornerRadius = 10
+        gyroStackView.addArrangedSubview(gyroZaxisLabel)
         
         let switchView  = UIView()
         switchView.translatesAutoresizingMaskIntoConstraints = false
@@ -98,6 +138,8 @@ class FallMonitorViewController: UIViewController {
         view.addSubview(switchView)
         
         switchFallButton =  UISwitch()
+        switchFallButton.isOn = false
+        switchFallButton.addTarget(self, action: #selector(updateAccAndGyro), for: .valueChanged)
         switchFallButton.translatesAutoresizingMaskIntoConstraints = false
         switchFallButton.thumbTintColor = .black
         switchFallButton.onTintColor = Appearance.color
@@ -123,24 +165,70 @@ class FallMonitorViewController: UIViewController {
             switchFallButton.centerXAnchor.constraint(equalTo: switchView.centerXAnchor),
             
             accelStackView.centerXAnchor.constraint(equalTo: accelContainerView.centerXAnchor),
-            accelStackView.topAnchor.constraint(equalTo: accelContainerView.topAnchor, constant: 10)
+            accelStackView.topAnchor.constraint(equalTo: accelContainerView.topAnchor, constant: 10),
+            accelStackView.centerYAnchor.constraint(equalTo: accelContainerView.centerYAnchor),
+            
+            gyroStackView.centerXAnchor.constraint(equalTo: gyroContainerView.centerXAnchor),
+            gyroStackView.topAnchor.constraint(equalTo: gyroContainerView.topAnchor, constant: 10),
+            gyroStackView.centerYAnchor.constraint(equalTo: gyroContainerView.centerYAnchor)
             
         ])
-        
-        
-        
         
     }
     
     // MARK: - Methods
     
-    func updateAccAndGyro() {
+    @objc func updateAccAndGyro() {
         
-        motionManager.startAccelerometerUpdates(to: OperationQueue.current!) { data, error in
+        if switchFallButton.isOn == true {
             
+            noticationCenter.requestAuthorization(options: [.sound, .badge, .badge]) { granted, error in
+                if granted {
+                    
+                    if self.motionManager.isAccelerometerAvailable {
+                        self.motionManager.startAccelerometerUpdates(to: .main) { data, error in
+                            if let data = data {
+                                self.accelXaxisLabel.text = "Accel - X : \(String(format: "%.2f", data.acceleration.x))"
+                                self.accelYaxisLabel.text = "Accel - Y : \(String(format: "%.2f", data.acceleration.y))"
+                                self.accelZaxisLabel.text = "Accel - Z : \(String(format: "%.2f", data.acceleration.z))"
+                                
+                                if (abs(data.acceleration.x) + abs(data.acceleration.y) + abs(data.acceleration.z)) >= 2.25 {
+                                    self.alertUserOfFall()
+                                    
+                                    self.motionManager.stopAccelerometerUpdates()
+                                    self.motionManager.stopGyroUpdates()
+                                }
+                            }
+                            
+                        }
+                    }
+        
+                }
+                
+    
+            }
             
+            motionManager.startGyroUpdates(to: OperationQueue.current!) { data, error in
+                if let data = data {
+                    self.gyroXaxisLabel.text = "Gyro - X : \(String(format: "%.2f", data.rotationRate.x))"
+                    self.gyroYaxisLabel.text = "Gyro - Y : \(String(format: "%.2f", data.rotationRate.y))"
+                    self.gyroZaxisLabel.text = "Gyro - Z : \(String(format: "%.2f", data.rotationRate.z))"
+                }
+            }
         }
+    
+    }
+    
+    func alertUserOfFall() {
+        noticationCenter.delegate = self
+        
+        let show = UNNotificationAction(identifier: "show", title: "Fall Detected", options: .foreground)
+        let category = UNNotificationCategory(identifier: "alert", actions: [show], intentIdentifiers: [])
+        
+        noticationCenter.setNotificationCategories([category])
+        
     }
     
 
 }
+
