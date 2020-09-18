@@ -166,8 +166,6 @@ class FallMonitorViewController: UIViewController {
         switchFallButton.onTintColor = Appearance.color
         switchView.addSubview(switchFallButton)
         
-        showButton()
-        
         NSLayoutConstraint.activate([
             statusLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -218,7 +216,7 @@ class FallMonitorViewController: UIViewController {
                                 self.accelYaxisLabel.text = "Accel - Y : \(String(format: "%.2f", data.acceleration.y))"
                                 self.accelZaxisLabel.text = "Accel - Z : \(String(format: "%.2f", data.acceleration.z))"
                                 
-                                if (abs(data.acceleration.x) + abs(data.acceleration.y) + abs(data.acceleration.z)) >= 2.25 {
+                                if (abs(data.acceleration.x) + abs(data.acceleration.y) + abs(data.acceleration.z)) >= 6.25 {
                                     self.alertUserOfFall()
                                     
                                     self.motionManager.stopAccelerometerUpdates()
