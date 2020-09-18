@@ -154,6 +154,9 @@ class MainViewController: UIViewController {
         }
         
         let vc = FallMonitorViewController()
+        vc.name = name
+        vc.model = model
+        vc.email = email
         present(vc, animated: true)
       
     }
@@ -165,5 +168,7 @@ extension MainViewController: UITextFieldDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         deviceModelTextField.resignFirstResponder()
+        nameTextField.resignFirstResponder()
+        ownersEmailTextField.resignFirstResponder()
     }
 }

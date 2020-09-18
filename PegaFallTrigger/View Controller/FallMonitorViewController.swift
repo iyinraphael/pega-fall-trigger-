@@ -34,7 +34,11 @@ class FallMonitorViewController: UIViewController {
     var status = "Normal"
     var motionManager  = CMMotionManager()
     let locationManager = CLLocationManager()
-    var fallData: FallData?
+    let fallModelController = FallModelController()
+    
+    var name: String?
+    var model: String?
+    var email: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,7 +160,6 @@ class FallMonitorViewController: UIViewController {
         switchFallButton.onTintColor = Appearance.color
         switchView.addSubview(switchFallButton)
         
-        
         NSLayoutConstraint.activate([
             statusLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -257,26 +260,29 @@ class FallMonitorViewController: UIViewController {
     func showButton() {
         
         let buttonView = UIView()
-               buttonView.translatesAutoresizingMaskIntoConstraints = false
-               buttonView.backgroundColor = .black
-               buttonView.layer.cornerRadius = 33
-               buttonView.clipsToBounds = true
-               view.addSubview(buttonView)
-               
-               sendInfoButton = UIButton()
-               sendInfoButton.translatesAutoresizingMaskIntoConstraints = false
-               sendInfoButton.backgroundColor = Appearance.color
-               sendInfoButton.layer.cornerRadius = 20
-               sendInfoButton.setTitle("Send", for: .normal)
-               sendInfoButton.titleLabel?.font = .systemFont(ofSize: 14)
-               sendInfoButton.addTarget(self, action: #selector(sendDataToServer), for: .touchUpInside)
-               buttonView.addSubview(sendInfoButton)
+        buttonView.translatesAutoresizingMaskIntoConstraints = false
+        buttonView.backgroundColor = .black
+        buttonView.layer.cornerRadius = 33
+        buttonView.clipsToBounds = true
+        view.addSubview(buttonView)
+        
+        sendInfoButton = UIButton()
+        sendInfoButton.translatesAutoresizingMaskIntoConstraints = false
+        sendInfoButton.backgroundColor = Appearance.color
+        sendInfoButton.layer.cornerRadius = 20
+        sendInfoButton.setTitle("Send", for: .normal)
+        sendInfoButton.titleLabel?.font = .systemFont(ofSize: 14)
+        sendInfoButton.isEnabled = true
+        sendInfoButton.addTarget(self, action: #selector(sendDataToServer), for: .touchUpInside)
+        
+        buttonView.addSubview(sendInfoButton)
         
         NSLayoutConstraint.activate([
             buttonView.heightAnchor.constraint(equalToConstant: 66),
             buttonView.widthAnchor.constraint(equalToConstant: 66),
             buttonView.topAnchor.constraint(equalTo: switchView.bottomAnchor, constant: 150),
             buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20),
             
             sendInfoButton.heightAnchor.constraint(equalToConstant: 44),
             sendInfoButton.widthAnchor.constraint(equalToConstant: 44),
@@ -287,6 +293,23 @@ class FallMonitorViewController: UIViewController {
     
     @objc func sendDataToServer() {
         
+        guard let location = locationManager.location,
+        let name = name,
+        let model = model,
+        let email = email else { return }
+        
+        let latitude = location.coordinate.latitude
+        let longitude = location.coordinate.longitude
+        
+        let fallData =  FallData(deviceModel: model,
+                                 deviceOwner: name,
+                                 ownersEmail: email,
+                                 latitude: latitude,
+                                 longitude: longitude,
+                                 indoor: false)
+        
+        
+        fallModelController.sendFallDataToPega(fallData: fallData)
         
     }
     
