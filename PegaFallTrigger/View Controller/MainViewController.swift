@@ -53,12 +53,14 @@ class MainViewController: UIViewController {
         
         let nameLabel = UILabel()
         nameLabel.text = "Name :"
+        nameLabel.textColor = .black
         nameLabel.font = .systemFont(ofSize: 14)
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         deviceOwnerStackView.addArrangedSubview(nameLabel)
         
         nameTextField = UITextField(frame: CGRect(x: 0, y: 0, width: 150, height: 15))
         nameTextField.layer.borderWidth = 0.2
+        nameTextField.textColor = .black
         nameTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         deviceOwnerStackView.addArrangedSubview(nameTextField)
         
@@ -71,12 +73,14 @@ class MainViewController: UIViewController {
         
         let emailLabel = UILabel()
         emailLabel.text = "Email :"
+        emailLabel.textColor = .black
         emailLabel.font = .systemFont(ofSize: 14)
         emailLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         ownersEmailStackView.addArrangedSubview(emailLabel)
         
         ownersEmailTextField = UITextField(frame: CGRect(x: 0, y: 0, width: 150, height: 15))
         ownersEmailTextField.layer.borderWidth = 0.2
+        ownersEmailTextField.textColor = .black
         ownersEmailTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         ownersEmailStackView.addArrangedSubview(ownersEmailTextField)
 
@@ -90,12 +94,14 @@ class MainViewController: UIViewController {
         
         let deviceModelLabel = UILabel()
         deviceModelLabel.text = "Device :"
+        deviceModelLabel.textColor = .black
         deviceModelLabel.font = .systemFont(ofSize: 14)
         deviceModelLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         deviceModelStackView.addArrangedSubview(deviceModelLabel)
         
         deviceModelTextField = UITextField(frame: CGRect(x: 0, y: 0, width: 150, height: 15))
         deviceModelTextField.layer.borderWidth = 0.2
+        deviceModelTextField.textColor = .black
         deviceModelTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         deviceModelStackView.addArrangedSubview(deviceModelTextField)
         
@@ -111,10 +117,10 @@ class MainViewController: UIViewController {
         view.addSubview(submitButton)
         
         NSLayoutConstraint.activate([
-            detailsLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 200),
+            detailsLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 100),
             detailsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            mainStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 220),
+            mainStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 120),
             mainStackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
             mainStackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
             

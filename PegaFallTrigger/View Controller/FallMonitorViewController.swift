@@ -36,13 +36,19 @@ class FallMonitorViewController: UIViewController {
     let locationManager = CLLocationManager()
     let fallModelController = FallModelController()
     
+    
     var name: String?
     var model: String?
     var email: String?
+    var latitude: CLLocationDegrees?
+    var longitude: CLLocationDegrees?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
         
         statusLabel = UILabel()
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -159,6 +165,8 @@ class FallMonitorViewController: UIViewController {
         switchFallButton.thumbTintColor = .black
         switchFallButton.onTintColor = Appearance.color
         switchView.addSubview(switchFallButton)
+        
+        showButton()
         
         NSLayoutConstraint.activate([
             statusLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
@@ -293,14 +301,10 @@ class FallMonitorViewController: UIViewController {
     
     @objc func sendDataToServer() {
         
-        guard let location = locationManager.location,
-        let name = name,
+        guard let name = name,
         let model = model,
         let email = email else { return }
-        
-        let latitude = location.coordinate.latitude
-        let longitude = location.coordinate.longitude
-        
+    
         let fallData =  FallData(deviceModel: model,
                                  deviceOwner: name,
                                  ownersEmail: email,
@@ -338,5 +342,19 @@ extension FallMonitorViewController: UNUserNotificationCenterDelegate {
             }
         }
         completionHandler()
+    }
+}
+
+extension FallMonitorViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            if CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self) {
+                if CLLocationManager.isRangingAvailable() {
+                    latitude  = manager.location?.coordinate.latitude
+                    longitude = manager.location?.coordinate.longitude
+                }
+            }
+        }
     }
 }

@@ -45,6 +45,6 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Altitude</string>
+	<string>Location</string>
 </dict>
 </plist>
