@@ -19,6 +19,7 @@ class MainViewController: UIViewController {
     var deviceOwnerLabel: UILabel!
     var ownersEmailLabel: UILabel!
 
+    var submitButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,7 +106,7 @@ class MainViewController: UIViewController {
         deviceModelTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         deviceModelStackView.addArrangedSubview(deviceModelTextField)
         
-        let submitButton = UIButton()
+        submitButton = UIButton()
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.backgroundColor = Appearance.color
         submitButton.layer.cornerRadius = 20
@@ -135,13 +136,17 @@ class MainViewController: UIViewController {
     }
     
     
-    // MARK: Methods
+    // MARK: - Methods
     
     @objc func saveData() {
         
         guard let name  = nameTextField.text,
             let model = deviceModelTextField.text,
             let email = ownersEmailTextField.text else { return }
+        
+        if name == "" || model == "" || email == "" {
+            return
+        }
         
         let strData = "\(name), \(model), \(email)"
         
